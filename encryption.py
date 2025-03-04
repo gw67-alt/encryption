@@ -60,7 +60,6 @@ def main():
 
     # Load the encrypted text from the file
     loaded_encrypted_text = load_text(encrypted_file)
-    print(f"Loaded Encrypted Text: {loaded_encrypted_text}")
 
     # Decrypt the encrypted text
     decrypted_text = decrypt(loaded_encrypted_text, key)
