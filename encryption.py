@@ -4,69 +4,81 @@ import random
 random.seed(42)
 
 # Encryption function
-def encrypt(text, key):
-    """Encrypt the text by scrambling its characters based on a permutation derived from the key."""
+def encrypt(data, key):
+    """Encrypt the data by scrambling its bytes based on a permutation derived from the key."""
     # Generate a permutation based on the key
-    perm = list(range(len(text)))
+    perm = list(range(len(data)))
     random.Random(key).shuffle(perm)
 
-    # Apply the permutation to the text
-    encrypted_text = [''] * len(text)
+    # Apply the permutation to the data
+    encrypted_data = bytearray(len(data))
     for i, j in enumerate(perm):
-        encrypted_text[j] = text[i]
+        encrypted_data[j] = data[i]
 
-    return ''.join(encrypted_text)
+    return bytes(encrypted_data)
 
 # Decryption function
-def decrypt(encrypted_text, key):
-    """Decrypt the text by reversing the scrambling based on the permutation derived from the key."""
+def decrypt(encrypted_data, key):
+    """Decrypt the data by reversing the scrambling based on the permutation derived from the key."""
     # Generate the same permutation based on the key
-    perm = list(range(len(encrypted_text)))
+    perm = list(range(len(encrypted_data)))
     random.Random(key).shuffle(perm)
 
-    # Apply the inverse permutation to the encrypted text
-    decrypted_text = [''] * len(encrypted_text)
+    # Apply the inverse permutation to the encrypted data
+    decrypted_data = bytearray(len(encrypted_data))
     for i, j in enumerate(perm):
-        decrypted_text[i] = encrypted_text[j]
+        decrypted_data[i] = encrypted_data[j]
 
-    return ''.join(decrypted_text)
+    return bytes(decrypted_data)
 
-# Function to load text from a file
-def load_text(file_path):
-    with open(file_path, 'r', encoding='utf-8') as file:
+# Function to load data from a file
+def load_data(file_path):
+    with open(file_path, 'rb') as file:
         return file.read()
 
-# Function to save text to a file
-def save_text(file_path, text):
-    with open(file_path, 'w', encoding='utf-8') as file:
-        file.write(text)
+# Function to save data to a file
+def save_data(file_path, data):
+    with open(file_path, 'wb') as file:
+        file.write(data)
 
 # Test application
 def main():
-    # Load text from a file
-    input_file = input("Enter the path of the file to encrypt: ")
-    original_text = load_text(input_file)
+    choice = input("Do you want to (e)ncrypt or (d)ecrypt a file? ").lower()
 
-    # Encryption key
-    key = int(input("Enter numerical key: "))
+    if choice == 'e':
+        # Load data from a file
+        input_file = input("Enter the path of the file to encrypt: ")
+        original_data = load_data(input_file)
 
-    # Encrypt the original text
-    encrypted_text = encrypt(original_text, key)
+        # Encryption key
+        key = int(input("Enter numerical key: "))
 
-    # Save the encrypted text to a file
-    encrypted_file = input("Enter the path of the file to save encrypted text: ")
-    save_text(encrypted_file, encrypted_text)
-    print(f"Encrypted text saved to {encrypted_file}")
+        # Encrypt the original data
+        encrypted_data = encrypt(original_data, key)
 
-    # Load the encrypted text from the file
-    loaded_encrypted_text = load_text(encrypted_file)
+        # Save the encrypted data to a file
+        encrypted_file = input("Enter the path of the file to save encrypted data: ")
+        save_data(encrypted_file, encrypted_data)
+        print(f"Encrypted data saved to {encrypted_file}")
 
-    # Decrypt the encrypted text
-    decrypted_text = decrypt(loaded_encrypted_text, key)
+    elif choice == 'd':
+        # Load data from a file
+        input_file = input("Enter the path of the file to decrypt: ")
+        encrypted_data = load_data(input_file)
 
-    # Verify that the decrypted text matches the original text
-    assert decrypted_text == original_text, "Decryption failed!"
-    print("Decryption successful!")
+        # Decryption key
+        key = int(input("Enter numerical key: "))
+
+        # Decrypt the encrypted data
+        decrypted_data = decrypt(encrypted_data, key)
+
+        # Save the decrypted data to a file
+        decrypted_file = input("Enter the path of the file to save decrypted data: ")
+        save_data(decrypted_file, decrypted_data)
+        print(f"Decrypted data saved to {decrypted_file}")
+
+    else:
+        print("Invalid choice. Please choose 'e' for encryption or 'd' for decryption.")
 
 if __name__ == "__main__":
     main()
