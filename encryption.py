@@ -46,7 +46,6 @@ def main():
     # Load text from a file
     input_file = input("Enter the path of the file to encrypt: ")
     original_text = load_text(input_file)
-    print(f"Original Text: {original_text}")
 
     # Encryption key
     key = int(input("Enter numerical key: "))
